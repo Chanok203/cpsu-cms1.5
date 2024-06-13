@@ -58,10 +58,10 @@ class Python310CPython(CompiledLanguage):
 
         commands = []
         files_to_package = []
-        
+
         for idx, source_filename in enumerate(source_filenames):
             cmd = """
-sed -i -e '1i\\
+/usr/bin/sed -i -e '1i\\
 import sys\\
 def input(msg: str = None) -> str:\\
     if msg is not None:\\
