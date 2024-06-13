@@ -55,6 +55,10 @@ class Python310CPython(CompiledLanguage):
                                  source_filenames, executable_filename,
                                  for_evaluation=True):
         """See Language.get_compilation_commands."""
+
+        commands = []
+        files_to_package = []
+        
         for idx, source_filename in enumerate(source_filenames):
             cmd = """
 sed -i -e '1i\\
@@ -63,19 +67,16 @@ def input(msg: str = None) -> str:\\
     if msg is not None:\\
         print(msg, end="", flush=True)\\
     return sys.stdin.readline().rstrip()\\
-' """.lstrip() + source_filename
-            print(cmd)
-            os.system(cmd)
+' """.lstrip()
+            commands.append([cmd, source_filename])
 
-
-        commands = []
-        files_to_package = []
         commands.append(["/usr/bin/python3.10", "-m", "compileall", "-b", "."])
         for idx, source_filename in enumerate(source_filenames):
             basename = os.path.splitext(os.path.basename(source_filename))[0]
             pyc_filename = "%s.pyc" % basename
             # The file with the entry point must be in first position.
             if idx == 0:
+                
                 commands.append(["/bin/mv", pyc_filename, self.MAIN_FILENAME])
                 files_to_package.append(self.MAIN_FILENAME)
             else:
