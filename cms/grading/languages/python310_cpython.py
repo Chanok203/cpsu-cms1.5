@@ -49,7 +49,7 @@ class Python310CPython(CompiledLanguage):
     def executable_extension(self):
         """See Language.executable.extension."""
         # Defined in PEP 441 (https://www.python.org/dev/peps/pep-0441/).
-        return ".zip"
+        return ".py"
 
     def get_compilation_commands(self,
                                  source_filenames, executable_filename,
@@ -60,18 +60,18 @@ class Python310CPython(CompiledLanguage):
         files_to_package = []
 
         commands.append(["/usr/bin/python3.10", "-m", "compileall", "-b", "."])
-        for idx, source_filename in enumerate(source_filenames):
-            basename = os.path.splitext(os.path.basename(source_filename))[0]
-            pyc_filename = "%s.pyc" % basename
-            # The file with the entry point must be in first position.
-            if idx == 0:
-                commands.append(["/bin/mv", pyc_filename, self.MAIN_FILENAME])
-                files_to_package.append(self.MAIN_FILENAME)
-            else:
-                files_to_package.append(pyc_filename)
+        # for idx, source_filename in enumerate(source_filenames):
+        #     basename = os.path.splitext(os.path.basename(source_filename))[0]
+        #     pyc_filename = "%s.pyc" % basename
+        #     # The file with the entry point must be in first position.
+        #     if idx == 0:
+        #         commands.append(["/bin/mv", pyc_filename, self.MAIN_FILENAME])
+        #         files_to_package.append(self.MAIN_FILENAME)
+        #     else:
+        #         files_to_package.append(pyc_filename)
 
-        commands.append(["/usr/bin/zip", executable_filename]
-                        + files_to_package)
+        # commands.append(["/usr/bin/zip", executable_filename]
+        #                 + files_to_package)
 
         return commands
 
