@@ -60,7 +60,11 @@ class Python310CPython(CompiledLanguage):
         files_to_package = []
 
         for idx, source_filename in enumerate(source_filenames):
-            cmd = "/usr/bin/sed -i -e '1iimport sys\ndef input(msg:str=None)->str:\n  if msg is not None:\n    print(msg, end="", flush=True)\n  return sys.stdin.readline()/rstrip()\n'"
+            cmd = "/usr/bin/sed -i -e '1iimport sys'"
+            commands.append([cmd, source_filename])
+        
+        for idx, source_filename in enumerate(source_filenames):
+            cmd = "/usr/bin/sed -i -e '2iinput = lambda x: sys.stdin.readline().rstrip()'"
             commands.append([cmd, source_filename])
 
         commands.append(["/usr/bin/python3.10", "-m", "compileall", "-b", "."])
@@ -69,7 +73,6 @@ class Python310CPython(CompiledLanguage):
             pyc_filename = "%s.pyc" % basename
             # The file with the entry point must be in first position.
             if idx == 0:
-                
                 commands.append(["/bin/mv", pyc_filename, self.MAIN_FILENAME])
                 files_to_package.append(self.MAIN_FILENAME)
             else:
