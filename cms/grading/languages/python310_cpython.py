@@ -55,6 +55,17 @@ class Python310CPython(CompiledLanguage):
                                  source_filenames, executable_filename,
                                  for_evaluation=True):
         """See Language.get_compilation_commands."""
+        for idx, source_filename in enumerate(source_filenames):
+            cmd = """
+sed -i -e '1i\\
+import sys\\
+def input(msg: str = None) -> str:\\
+    if msg is not None:\\
+        print(msg, end="", flush=True)\\
+    return sys.stdin.readline().rstrip()\\
+' """.lstrip() + source_filename
+            os.system(cmd)
+
 
         commands = []
         files_to_package = []
