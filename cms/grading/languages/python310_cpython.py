@@ -64,6 +64,7 @@ def input(msg: str = None) -> str:\\
         print(msg, end="", flush=True)\\
     return sys.stdin.readline().rstrip()\\
 ' """.lstrip() + source_filename
+            print(cmd)
             os.system(cmd)
 
 
