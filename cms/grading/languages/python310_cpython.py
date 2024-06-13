@@ -49,7 +49,7 @@ class Python310CPython(CompiledLanguage):
     def executable_extension(self):
         """See Language.executable.extension."""
         # Defined in PEP 441 (https://www.python.org/dev/peps/pep-0441/).
-        return ".pyz"
+        return ".zip"
 
     def get_compilation_commands(self,
                                  source_filenames, executable_filename,
