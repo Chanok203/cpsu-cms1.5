@@ -60,14 +60,7 @@ class Python310CPython(CompiledLanguage):
         files_to_package = []
 
         for idx, source_filename in enumerate(source_filenames):
-            cmd = """
-/usr/bin/sed -i -e '1i\\
-import sys\\
-def input(msg: str = None) -> str:\\
-    if msg is not None:\\
-        print(msg, end="", flush=True)\\
-    return sys.stdin.readline().rstrip()\\
-' """.lstrip()
+            cmd = "/usr/bin/sed -i -e '1iimport sys\ndef input(msg:str=None)->str:\n  if msg is not None:\n    print(msg, end="", flush=True)\n  return sys.stdin.readline()/rstrip()\n'"
             commands.append([cmd, source_filename])
 
         commands.append(["/usr/bin/python3.10", "-m", "compileall", "-b", "."])
