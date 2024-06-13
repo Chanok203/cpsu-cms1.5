@@ -59,8 +59,8 @@ class Python310CPython(CompiledLanguage):
         commands = []
         files_to_package = []
 
-        commands.append(["/usr/bin/sed -i -e '1iimport sys'", source_filenames[0]])
-        commands.append(["/usr/bin/sed -i -e '2iinput = lambda x: sys.stdin.readline().rstrip()'", source_filenames[0]])
+        commands.append(["/usr/bin/sed -i '1iimport sys'", source_filenames[0]])
+        commands.append(["/usr/bin/sed -i '2iinput = lambda x: sys.stdin.readline().rstrip()'", source_filenames[0]])
 
         commands.append(["/usr/bin/python3.10", "-m", "compileall", "-b", "."])
         for idx, source_filename in enumerate(source_filenames):
