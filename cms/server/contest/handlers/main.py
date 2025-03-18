@@ -240,13 +240,7 @@ class LoginHandler(ContestHandler):
             self.redirect(error_page)
         else:
             # auto set IP if login successfully (edit by Chanok)
-            if participation.ip == None:
-                participation.ip = [ip_address]
-
-            if ip_address not in participation.ip:
-                participation.ip.append(ip_address)
-
-            self.sql_session.commit()
+            # TODO: I think we should set IP here
             # end (edit by Chanok)
             self.redirect(next_page)
 
