@@ -154,7 +154,7 @@ class ClearParticipationIPHandler(BaseHandler):
             .all()
         )
         for participation in participations:
-            participation.ip = []
+            participation.ip = None
         self.sql_session.commit()
 
         self.service.add_notification(
