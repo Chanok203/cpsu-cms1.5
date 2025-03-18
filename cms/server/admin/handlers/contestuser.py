@@ -92,7 +92,7 @@ class ContestUsersHandler(BaseHandler):
         self.redirect(fallback_page)
 
 
-class ClearParticipationHandler(BaseHandler):
+class RemoveParticipationHandler(BaseHandler):
     """Get returns a page asking for confirmation, delete actually removes
     the participation from the contest.
 
