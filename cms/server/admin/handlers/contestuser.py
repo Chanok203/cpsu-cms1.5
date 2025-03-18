@@ -156,6 +156,11 @@ class ClearParticipationIPHandler(BaseHandler):
         for participation in participations:
             participation.ip = []
         self.sql_session.commit()
+
+        self.service.add_notification(
+                make_datetime(),
+                "Operation successful.", "Clear IP")
+        
         self.redirect(fallback_page)
 # end (edit by Chanok)
 

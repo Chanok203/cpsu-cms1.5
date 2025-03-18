@@ -9,7 +9,7 @@
 
 <form action="{{ url("contest", contest.id, "users" , "clearip" ) }}" method="POST">
   {{ xsrf_form_html|safe }}
-  Clear all user ip: <input type="submit" value="Clear IP" />
+  Clear IP: <input type="submit" value="Clear IP" />
 </form>
 
 <form action="{{ url("contest", contest.id, "users", "add") }}" method="POST">
