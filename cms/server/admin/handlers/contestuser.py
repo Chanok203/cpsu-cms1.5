@@ -53,13 +53,17 @@ class ContestUsersHandler(BaseHandler):
 
         self.r_params = self.render_params()
         self.r_params["contest"] = self.contest
-        self.r_params["unassigned_users"] = \
-            self.sql_session.query(User)\
-                .filter(User.id.notin_(
+        self.r_params["unassigned_users"] = (
+            self.sql_session.query(User)
+            .filter(
+                User.id.notin_(
                     self.sql_session.query(Participation.user_id)
-                        .filter(Participation.contest == self.contest)
-                        .all()))\
-                .all()
+                    .filter(Participation.contest == self.contest)
+                    .all()
+                )
+            )
+            .all()
+        )
         self.render("contest_users.html", **self.r_params)
 
     @require_permission(BaseHandler.PERMISSION_ALL)
@@ -74,13 +78,13 @@ class ContestUsersHandler(BaseHandler):
             ), "Please select a valid operation"
         except Exception as error:
             self.service.add_notification(
-                make_datetime(), "Invalid field(s)", repr(error))
+                make_datetime(), "Invalid field(s)", repr(error)
+            )
             self.redirect(fallback_page)
             return
 
         if operation == self.REMOVE_FROM_CONTEST:
-            asking_page = \
-                self.url("contest", contest_id, "user", user_id, "remove")
+            asking_page = self.url("contest", contest_id, "user", user_id, "remove")
             # Open asking for remove page
             self.redirect(asking_page)
             return
@@ -88,7 +92,7 @@ class ContestUsersHandler(BaseHandler):
         self.redirect(fallback_page)
 
 
-class RemoveParticipationHandler(BaseHandler):
+class ClearParticipationHandler(BaseHandler):
     """Get returns a page asking for confirmation, delete actually removes
     the participation from the contest.
 
@@ -98,16 +102,19 @@ class RemoveParticipationHandler(BaseHandler):
     def get(self, contest_id, user_id):
         self.contest = self.safe_get_item(Contest, contest_id)
         user = self.safe_get_item(User, user_id)
-        participation = self.sql_session.query(Participation)\
-                            .filter(Participation.contest_id == contest_id)\
-                            .filter(Participation.user_id == user_id)\
-                            .first()
+        participation = (
+            self.sql_session.query(Participation)
+            .filter(Participation.contest_id == contest_id)
+            .filter(Participation.user_id == user_id)
+            .first()
+        )
         # Check that the participation is valid.
         if participation is None:
             raise tornado_web.HTTPError(404)
 
-        submission_query = self.sql_session.query(Submission)\
-            .filter(Submission.participation == participation)
+        submission_query = self.sql_session.query(Submission).filter(
+            Submission.participation == participation
+        )
         self.render_params_for_remove_confirmation(submission_query)
 
         self.r_params["user"] = user
@@ -119,10 +126,12 @@ class RemoveParticipationHandler(BaseHandler):
         self.contest = self.safe_get_item(Contest, contest_id)
         user = self.safe_get_item(User, user_id)
 
-        participation = self.sql_session.query(Participation)\
-            .filter(Participation.user == user)\
-            .filter(Participation.contest == self.contest)\
+        participation = (
+            self.sql_session.query(Participation)
+            .filter(Participation.user == user)
+            .filter(Participation.contest == self.contest)
             .first()
+        )
 
         # Unassign the user from the contest.
         self.sql_session.delete(participation)
@@ -134,6 +143,21 @@ class RemoveParticipationHandler(BaseHandler):
         # Maybe they'll want to do this again (for another participation)
         self.write("../../users")
 
+# edit by Chanok
+class ClearParticipationIPHandler(BaseHandler):
+    @require_permission(BaseHandler.PERMISSION_ALL)
+    def post(self, contest_id):
+        fallback_page = self.url("contest", contest_id, "users")
+        participations = (
+            self.sql_session.query(Participation)
+            .filter(Participation.contest_id == contest_id)
+            .all()
+        )
+        for participation in participations:
+            participation.ip = []
+        self.sql_session.commit()
+        self.redirect(fallback_page)
+# end (edit by Chanok)
 
 class AddContestUserHandler(BaseHandler):
     @require_permission(BaseHandler.PERMISSION_ALL)
@@ -147,7 +171,8 @@ class AddContestUserHandler(BaseHandler):
             assert user_id != "null", "Please select a valid user"
         except Exception as error:
             self.service.add_notification(
-                make_datetime(), "Invalid field(s)", repr(error))
+                make_datetime(), "Invalid field(s)", repr(error)
+            )
             self.redirect(fallback_page)
             return
 
@@ -170,20 +195,24 @@ class ParticipationHandler(BaseHandler):
     questions, messages (and allows to send the latters).
 
     """
+
     @require_permission(BaseHandler.AUTHENTICATED)
     def get(self, contest_id, user_id):
         self.contest = self.safe_get_item(Contest, contest_id)
-        participation = self.sql_session.query(Participation)\
-                            .filter(Participation.contest_id == contest_id)\
-                            .filter(Participation.user_id == user_id)\
-                            .first()
+        participation = (
+            self.sql_session.query(Participation)
+            .filter(Participation.contest_id == contest_id)
+            .filter(Participation.user_id == user_id)
+            .first()
+        )
 
         # Check that the participation is valid.
         if participation is None:
             raise tornado_web.HTTPError(404)
 
-        submission_query = self.sql_session.query(Submission)\
-            .filter(Submission.participation == participation)
+        submission_query = self.sql_session.query(Submission).filter(
+            Submission.participation == participation
+        )
         page = int(self.get_query_argument("page", 0))
         self.render_params_for_submissions(submission_query, page)
 
@@ -194,14 +223,15 @@ class ParticipationHandler(BaseHandler):
 
     @require_permission(BaseHandler.PERMISSION_ALL)
     def post(self, contest_id, user_id):
-        fallback_page = \
-            self.url("contest", contest_id, "user", user_id, "edit")
+        fallback_page = self.url("contest", contest_id, "user", user_id, "edit")
 
         self.contest = self.safe_get_item(Contest, contest_id)
-        participation = self.sql_session.query(Participation)\
-                            .filter(Participation.contest_id == contest_id)\
-                            .filter(Participation.user_id == user_id)\
-                            .first()
+        participation = (
+            self.sql_session.query(Participation)
+            .filter(Participation.contest_id == contest_id)
+            .filter(Participation.user_id == user_id)
+            .first()
+        )
 
         # Check that the participation is valid.
         if participation is None:
@@ -224,14 +254,15 @@ class ParticipationHandler(BaseHandler):
 
             # Update the team
             self.get_string(attrs, "team")
-            team = self.sql_session.query(Team)\
-                       .filter(Team.code == attrs["team"])\
-                       .first()
+            team = (
+                self.sql_session.query(Team).filter(Team.code == attrs["team"]).first()
+            )
             participation.team = team
 
         except Exception as error:
             self.service.add_notification(
-                make_datetime(), "Invalid field(s)", repr(error))
+                make_datetime(), "Invalid field(s)", repr(error)
+            )
             self.redirect(fallback_page)
             return
 
@@ -242,31 +273,36 @@ class ParticipationHandler(BaseHandler):
 
 
 class MessageHandler(BaseHandler):
-    """Called when a message is sent to a specific user.
-
-    """
+    """Called when a message is sent to a specific user."""
 
     @require_permission(BaseHandler.PERMISSION_MESSAGING)
     def post(self, contest_id, user_id):
         user = self.safe_get_item(User, user_id)
         self.contest = self.safe_get_item(Contest, contest_id)
-        participation = self.sql_session.query(Participation)\
-            .filter(Participation.contest == self.contest)\
-            .filter(Participation.user == user)\
+        participation = (
+            self.sql_session.query(Participation)
+            .filter(Participation.contest == self.contest)
+            .filter(Participation.user == user)
             .first()
+        )
 
         # check that the participation is valid
         if participation is None:
             raise tornado_web.HTTPError(404)
 
-        message = Message(make_datetime(),
-                          self.get_argument("message_subject", ""),
-                          self.get_argument("message_text", ""),
-                          participation=participation,
-                          admin=self.current_user)
+        message = Message(
+            make_datetime(),
+            self.get_argument("message_subject", ""),
+            self.get_argument("message_text", ""),
+            participation=participation,
+            admin=self.current_user,
+        )
         self.sql_session.add(message)
         if self.try_commit():
-            logger.info("Message submitted to user %s in contest %s.",
-                        user.username, self.contest.name)
+            logger.info(
+                "Message submitted to user %s in contest %s.",
+                user.username,
+                self.contest.name,
+            )
 
         self.redirect(self.url("contest", contest_id, "user", user_id, "edit"))

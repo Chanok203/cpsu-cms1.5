@@ -7,7 +7,7 @@
 
 {% include "fragments/overload_warning.html" %}
 
-<form action="{{ url("contest", contest.id, "users", "add") }}" method="POST">
+<form action="{{ url(" contest", contest.id, "users" , "add" ) }}" method="POST">
   {{ xsrf_form_html|safe }}
   Add a new user:
   <select name="user_id">
@@ -18,23 +18,21 @@
     </option>
     {% endfor %}
   </select>
-  <input type="submit"
-{% if not admin.permission_all %}
-         disabled
-{% endif %}
-         value="Add user" />
+  <input type="submit" {% if not admin.permission_all %} disabled {% endif %} value="Add user" />
 </form>
 
-<form action="{{ url("contest", contest.id, "users") }}" method="POST">
+<!-- edit by Chanok -->
+<form action="{{ url(" contest", contest.id, "users" , "clearip" ) }}" method="POST">
+  {{ xsrf_form_html|safe }}
+  Clear all user ip: <input type="submit" value="Clear IP" />
+</form>
+<!-- end (edit by Chanok) -->
+
+<form action="{{ url(" contest", contest.id, "users" ) }}" method="POST">
   {{ xsrf_form_html|safe }}
   Edit selected user:
-  <input type="submit"
-         name="operation"
-         value="Remove from contest"
-{% if not admin.permission_all %}
-         disabled
-{% endif %}
-         />
+  <input type="submit" name="operation" value="Remove from contest" {% if not admin.permission_all %} disabled {% endif
+    %} />
   <table class="bordered">
     <thead>
       <tr>
@@ -48,9 +46,9 @@
       {% for u in contest.participations|map(attribute="user")|sort(attribute="username") %}
       <tr>
         <td>
-          <input type="radio" name="user_id" value="{{ u.id }}"/>
+          <input type="radio" name="user_id" value="{{ u.id }}" />
         </td>
-        <td><a href="{{ url("contest", contest.id, "user", u.id, "edit") }}">{{ u.username }}</a></td>
+        <td><a href="{{ url(" contest", contest.id, "user" , u.id, "edit" ) }}">{{ u.username }}</a></td>
         <td>{{ u.first_name }}</td>
         <td>{{ u.last_name }}</td>
       </tr>

@@ -52,7 +52,7 @@ from .contesttask import \
     AddContestTaskHandler
 from .contestuser import \
     ContestUsersHandler, \
-    RemoveParticipationHandler, \
+    ClearParticipationHandler, \
     AddContestUserHandler, \
     ParticipationHandler, \
     MessageHandler
@@ -127,6 +127,7 @@ HANDLERS = [
 
     (r"/contest/([0-9]+)/users", ContestUsersHandler),
     (r"/contest/([0-9]+)/users/add", AddContestUserHandler),
+    (r"/contest/([0-9]+)/users/clearip", ClearParticipationHandler), # edit by Chanok
     (r"/contest/([0-9]+)/user/([0-9]+)/remove", RemoveParticipationHandler),
     (r"/contest/([0-9]+)/user/([0-9]+)/edit", ParticipationHandler),
     (r"/contest/([0-9]+)/user/([0-9]+)/message", MessageHandler),
