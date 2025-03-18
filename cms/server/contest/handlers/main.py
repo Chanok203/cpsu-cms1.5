@@ -239,6 +239,10 @@ class LoginHandler(ContestHandler):
         if participation is None:
             self.redirect(error_page)
         else:
+            # auto set IP if login successfully
+            participation.ip = ip_address
+            self.sql_session.commit()
+
             self.redirect(next_page)
 
 
