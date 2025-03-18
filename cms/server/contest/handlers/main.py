@@ -239,6 +239,7 @@ class LoginHandler(ContestHandler):
         if participation is None:
             self.redirect(error_page)
         else:
+            # TODO: set ip here (by Chanok)
             self.redirect(next_page)
 
 
