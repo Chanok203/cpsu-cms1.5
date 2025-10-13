@@ -7,6 +7,13 @@
 
 {% include "fragments/overload_warning.html" %}
 
+<!-- edited by Chanok -->
+<form action="{{ url("contest", contest.id, "users" , "clearip" ) }}" method="POST">
+  {{ xsrf_form_html|safe }}
+  Clear IP: <input type="submit" value="Clear IP" />
+</form>
+<!-- end (edited by Chanok) -->
+
 <form action="{{ url("contest", contest.id, "users", "add") }}" method="POST">
   {{ xsrf_form_html|safe }}
   Add a new user:

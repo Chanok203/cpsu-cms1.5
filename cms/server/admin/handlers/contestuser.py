@@ -141,6 +141,26 @@ class RemoveParticipationHandler(BaseHandler):
         # Maybe they'll want to do this again (for another participation)
         self.write("../../users")
 
+# edited by Chanok
+class ClearParticipationIPHandler(BaseHandler):
+    @require_permission(BaseHandler.PERMISSION_ALL)
+    def post(self, contest_id):
+        fallback_page = self.url("contest", contest_id, "users")
+        participations = (
+            self.sql_session.query(Participation)
+            .filter(Participation.contest_id == contest_id)
+            .all()
+        )
+        for participation in participations:
+            participation.ip = None
+        self.sql_session.commit()
+
+        self.service.add_notification(
+                make_datetime(),
+                "Operation successful.", "Clear IP")
+        
+        self.redirect(fallback_page)
+# end (edited by Chanok)
 
 class AddContestUserHandler(BaseHandler):
     @require_permission(BaseHandler.PERMISSION_ALL)
