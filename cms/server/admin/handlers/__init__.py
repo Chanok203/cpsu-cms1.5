@@ -54,6 +54,7 @@ from .contestuser import \
     ContestUsersHandler, \
     RemoveParticipationHandler, \
     AddContestUserHandler, \
+    ClearParticipationIPHandler, \
     ParticipationHandler, \
     MessageHandler
 from .dataset import \
@@ -127,6 +128,7 @@ HANDLERS = [
 
     (r"/contest/([0-9]+)/users", ContestUsersHandler),
     (r"/contest/([0-9]+)/users/add", AddContestUserHandler),
+    (r"/contest/([0-9]+)/users/clearip", ClearParticipationIPHandler), # edit by Chanok
     (r"/contest/([0-9]+)/user/([0-9]+)/remove", RemoveParticipationHandler),
     (r"/contest/([0-9]+)/user/([0-9]+)/edit", ParticipationHandler),
     (r"/contest/([0-9]+)/user/([0-9]+)/message", MessageHandler),
