@@ -251,14 +251,15 @@ class LoginHandler(ContestHandler):
             # auto set IP if login successfully (efited by Chanok)
             ip_address_str = str(ip_address)
 
-            ipv6_to_ipv4 = lambda ip: ipaddress.ip_address(ip).ipv4_mapped
-            ip_address_str = ipv6_to_ipv4(ip_address_str)
+            # ipv6_to_ipv4 = lambda ip: ipaddress.ip_address(ip).ipv4_mapped
+            # ip_address_str = ipv6_to_ipv4(ip_address_str)
 
             if participation.ip == None:
                 participation.ip = [ip_address_str]
             
-            if ip_address not in participation.ip:
-                participation.ip.append(ip_address_str)
+            # multi ip address
+            # if ip_address not in participation.ip:
+            #     participation.ip.append(ip_address_str)
             
             self.sql_session.commit()
             # end (edited by Chanok)
