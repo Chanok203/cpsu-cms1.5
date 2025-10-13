@@ -251,11 +251,12 @@ class LoginHandler(ContestHandler):
             # auto set IP if login successfully (efited by Chanok)
             ip_address_str = str(ip_address)
 
-            safe_ip_to_ipv4_str = lambda ip: str(
-                ipaddress.ip_network(ip, strict=False).network_address.ipv4_mapped
-                or ipaddress.ip_network(ip, strict=False).network_address
-            )
-            ip_address_str = safe_ip_to_ipv4_str(ip_address_str)
+            # safe_ip_to_ipv4_str = lambda ip: str(
+            #     ipaddress.ip_network(ip, strict=False).network_address.ipv4_mapped
+            #     or ipaddress.ip_network(ip, strict=False).network_address
+            # )
+            # ip_address_str = safe_ip_to_ipv4_str(ip_address_str)
+
             if participation.ip == None:
                 participation.ip = [ip_address_str]
             
