@@ -250,6 +250,10 @@ class LoginHandler(ContestHandler):
         else:
             # auto set IP if login successfully (efited by Chanok)
             ip_address_str = str(ip_address)
+
+            ipv6_to_ipv4 = lambda ip: ipaddress.ip_address(ip).ipv4_mapped
+            ip_address_str = ipv6_to_ipv4(ip_address_str)
+
             if participation.ip == None:
                 participation.ip = [ip_address_str]
             
